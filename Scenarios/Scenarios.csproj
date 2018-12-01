@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncFromSync\AsyncFromSync.cs" />
+    <Compile Include="AsyncFromSync\Deadlock.cs" />
     <Compile Include="AsyncVoidVsAsyncTask\AsyncVoidFlow.cs" />
     <Compile Include="AsyncVoidVsAsyncTask\OnlyOnFaulted.cs" />
     <Compile Include="AsyncVoidVsAsyncTask\UnobservedTaskException.cs" />
