@@ -16,8 +16,10 @@ namespace Scenarios
 
         private static async Task Main()
         {
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-En");
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-En");
+            Thread.CurrentThread.CurrentUICulture =
+                Thread.CurrentThread.CurrentCulture =
+                    CultureInfo.DefaultThreadCurrentCulture =
+                        CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-Us");
 
             TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
 
@@ -187,18 +189,10 @@ namespace Scenarios
             return source.PadLeft(padLeft).PadRight(length);
         }
 
-        // Not perfect - Concurrency Visualizer shows as WPF task
-        // but can use Dispatcher.CurrentDispatcher.BeginInvoke !!!
-        // refactor to tests?
         /*
          * https://stackoverflow.com/a/14160254/275330
+         * Not perfect - Concurrency Visualizer shows as WPF task, but can use Dispatcher.CurrentDispatcher.BeginInvoke !!!
          */
-
-        //public static void RunInWpfSyncContext(Action action)
-        //{
-        //    RunInWpfSyncContext(() => Task.Run(action));
-        //}
-
         public static void RunInWpfSyncContext(Func<Task> function)
         {
             SynchronizationContext.Current.ShouldBeNull();

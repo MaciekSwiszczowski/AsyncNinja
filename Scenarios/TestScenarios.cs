@@ -7,7 +7,40 @@ using Microsoft.ConcurrencyVisualizer.Instrumentation;
 
 namespace Scenarios
 {
-    // Schedulers!
+    // TODO
+
+    /// 
+    /// Schedulers!
+    ///
+
+    /// 
+    /// Tests! https://www.youtube.com/watch?v=yapByx1gMCM
+    ///
+
+    ///
+    /// Fix: 'background' option not saved, not used in profiling mode
+    ///
+
+    ///
+    /// Add project description on GitHub
+    /// 
+
+    ///
+    /// Microsoft.VisualStudio.Threading
+    /// 
+
+
+
+
+
+
+
+
+
+
+    //        --------------------------------------------
+    //          All below => is to review
+    //        --------------------------------------------
 
 
 
@@ -45,7 +78,6 @@ namespace Scenarios
     // https://www.youtube.com/watch?v=jgxJbshvCXQ -- 33:00 ??? Przeanalizować
     // awaiting event: https://www.youtube.com/watch?v=jgxJbshvCXQ -- 41:33
 
-    // await Task.Yield(); //???
 
     //  Async void lambda functions -> http://tomasp.net/blog/csharp-async-gotchas.aspx/ Gotcha #4: Async void lambda functions
 

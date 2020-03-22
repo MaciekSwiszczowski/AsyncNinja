@@ -29,7 +29,7 @@ namespace Scenarios.AsyncFromSync
             }
         }
 
-        private async Task DoAsync()
+        private static async Task DoAsync()
         {
             await Task.Run(() =>
             {
