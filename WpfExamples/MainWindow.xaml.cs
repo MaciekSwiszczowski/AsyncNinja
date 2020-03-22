@@ -10,24 +10,41 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.ConcurrencyVisualizer.Instrumentation;
-using WpfExamples.Annotations;
 
 namespace WpfExamples
 {
     public partial class MainWindow : INotifyPropertyChanged
     {
         private const int ElementsToAddCount = 10;
-
-        private bool _heavyLoadStarted;
-        private Color _previousColor;
         private readonly int _delay = 50;
         private readonly int _maxElements = 306;
         private readonly Random _random = new Random();
-        private int _elementsPushedToDispatcher;
         private int _elementsDisplayed;
         private int _elementsInDispacherQueue;
-        private DispatcherPriority _selectedDispatcherPriority = DispatcherPriority.Background;
+        private int _elementsPushedToDispatcher;
+
+        private bool _heavyLoadStarted;
+        private Color _previousColor;
         private DispatcherPriority _selectedAddNewItemPriority = DispatcherPriority.Background;
+        private DispatcherPriority _selectedDispatcherPriority = DispatcherPriority.Background;
+
+        public MainWindow()
+        {
+            Items = new ObservableCollection<Brush>();
+            var dispatcherPriorities = Enum.GetValues(typeof(DispatcherPriority)).Cast<DispatcherPriority>();
+            DispatcherPriorities = new ObservableCollection<DispatcherPriority>(dispatcherPriorities);
+
+            SelectedDispatcherPriority = DispatcherPriority.Background;
+
+            DataContext = this;
+
+            InitializeComponent();
+
+            Enumerable.Range(0, _maxElements).ToList().ForEach(_ => AddNewNormalItem());
+            _elementsPushedToDispatcher = 0;
+            _elementsDisplayed = 0;
+            ElementsInDispacherQueue = 0;
+        }
 
         public ObservableCollection<Brush> Items { get; }
         public ObservableCollection<DispatcherPriority> DispatcherPriorities { get; }
@@ -63,48 +80,28 @@ namespace WpfExamples
             }
         }
 
-        public MainWindow()
-        {
-            Items = new ObservableCollection<Brush>();
-            var dispatcherPriorities = Enum.GetValues(typeof(DispatcherPriority)).Cast<DispatcherPriority>();
-            DispatcherPriorities = new ObservableCollection<DispatcherPriority>(dispatcherPriorities);
-
-            SelectedDispatcherPriority = DispatcherPriority.Background;
-
-            DataContext = this;
-            
-            InitializeComponent();
-            
-            Enumerable.Range(0, _maxElements).ToList().ForEach(_ => AddNewNormalItem());
-            _elementsPushedToDispatcher = 0;
-            _elementsDisplayed = 0;
-            ElementsInDispacherQueue = 0;
-        }
-
         // TODO: Add switch for DispatcherPriority to show that application can be hanged
         // TODO: and separate for special operations
 
         private async void OnCreateHeavyLoad(object sender, RoutedEventArgs e)
         {
             _heavyLoadStarted = true;
-            
+
             _previousColor = new Color();
-            
+
             while (_heavyLoadStarted)
             {
                 Debug.WriteLine($"ThreadId: {Thread.CurrentThread.ManagedThreadId}");
-                
+
                 _elementsPushedToDispatcher++;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 if (Application.Current != null)
-                {
-                    Application.Current.Dispatcher.BeginInvoke(new Action(AddNewNormalItem), SelectedDispatcherPriority);
-                }
+                    Application.Current.Dispatcher.BeginInvoke(new Action(AddNewNormalItem),
+                        SelectedDispatcherPriority);
 #pragma warning restore CS4014
 
                 await Task.Delay(_delay - 5).ConfigureAwait(false);
-               
             }
         }
 
@@ -115,7 +112,7 @@ namespace WpfExamples
                 A = 150,
                 R = GetNewColor(_previousColor.R),
                 G = GetNewColor(_previousColor.G),
-                B = GetNewColor(_previousColor.B),
+                B = GetNewColor(_previousColor.B)
             };
 
             _previousColor = newColor;
@@ -140,7 +137,7 @@ namespace WpfExamples
                 A = 255,
                 R = 255,
                 G = 0,
-                B = 0,
+                B = 0
             };
 
             AddItem(newColor, _delay * 6);
@@ -151,12 +148,9 @@ namespace WpfExamples
             Items.Add(new SolidColorBrush(colour));
 
             ElementsInDispacherQueue = _elementsPushedToDispatcher - ++_elementsDisplayed;
-                
-            if (Items.Count > _maxElements)
-            {
-                Items.RemoveAt(0);
-            }
-            
+
+            if (Items.Count > _maxElements) Items.RemoveAt(0);
+
             if (Items.Count == _maxElements)
             {
                 var span = Markers.EnterSpan($"Starting delay: {delay}");
@@ -176,6 +170,7 @@ namespace WpfExamples
                 _elementsPushedToDispatcher++;
                 Application.Current.Dispatcher.Invoke(AddNewSpecialItem, SelectedAddNewItemPriority);
             }
+
             InvokeButton.IsEnabled = true;
         }
 
@@ -199,9 +194,7 @@ namespace WpfExamples
             _elementsPushedToDispatcher += ElementsToAddCount;
 
             for (var i = 0; i < ElementsToAddCount; i++)
-            {
                 await Application.Current.Dispatcher.InvokeAsync(AddNewSpecialItem, SelectedAddNewItemPriority);
-            }
 
             InvokeAsyncButton.IsEnabled = true;
         }
@@ -211,9 +204,10 @@ namespace WpfExamples
             WhenAllButton.IsEnabled = false;
 
             _elementsPushedToDispatcher += ElementsToAddCount;
-            
+
             var tasks = Enumerable.Range(0, ElementsToAddCount)
-                .Select(_ => Application.Current.Dispatcher.InvokeAsync(AddNewSpecialItem, SelectedAddNewItemPriority).Task);
+                .Select(_ =>
+                    Application.Current.Dispatcher.InvokeAsync(AddNewSpecialItem, SelectedAddNewItemPriority).Task);
 
             await Task.WhenAll(tasks);
 
@@ -222,7 +216,6 @@ namespace WpfExamples
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -10,7 +10,9 @@ namespace Scenarios.AsyncFromSync
     {
         public string Title { get; } = "Async from sync";
         public int Order { get; } = 1000;
-        public string Comment { get; } = "How to correctly (safely and without deadlocks) start an async method from a sync one?";
+
+        public string Comment { get; } =
+            "How to correctly (safely and without deadlocks) start an async method from a sync one?";
 
         public async Task RunAsync()
         {
@@ -40,7 +42,6 @@ namespace Scenarios.AsyncFromSync
 
                 // this exception will never be noticed
                 await Task.Run(() => throw new Exception());
-
             });
 
             Console.WriteLine("After Task.Run().");

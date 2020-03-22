@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 using static Scenarios.Helper;
 
 namespace Scenarios.AsyncRead
@@ -13,16 +11,17 @@ namespace Scenarios.AsyncRead
         public string Title { get; } = "Async vs sync file read";
         public int Order { get; } = 1000;
         public string Comment { get; } = "to do";
+
         public async Task RunAsync()
         {
             var bufferSize = 1000000;
-            
+
             StartSpan("Read async");
 
             for (var i = 0; i < 100; i++)
-            {
-                using (var sourceStream = new FileStream(@"AsyncVsSyncFileRead//LoremIpsum.txt", FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, 
-                    useAsync: true))
+                using (var sourceStream = new FileStream(@"AsyncVsSyncFileRead//LoremIpsum.txt", FileMode.Open,
+                    FileAccess.Read, FileShare.Read, 4096,
+                    true))
                 {
                     var sb = new StringBuilder();
 
@@ -36,7 +35,6 @@ namespace Scenarios.AsyncRead
 
                     //Console.WriteLine(sb.ToString());
                 }
-            }
 
             EndSpan("Read async");
 
@@ -47,9 +45,9 @@ namespace Scenarios.AsyncRead
             StartSpan("Read sync");
 
             for (var i = 0; i < 100; i++)
-            {
-                using (var sourceStream = new FileStream(@"AsyncVsSyncFileRead//LoremIpsum.txt", FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096,
-                    useAsync: false))
+                using (var sourceStream = new FileStream(@"AsyncVsSyncFileRead//LoremIpsum.txt", FileMode.Open,
+                    FileAccess.Read, FileShare.Read, 4096,
+                    false))
                 {
                     var sb = new StringBuilder();
 
@@ -63,8 +61,7 @@ namespace Scenarios.AsyncRead
 
                     //Console.WriteLine(sb.ToString());
                 }
-                
-            }
+
             EndSpan("Read sync");
 
             Console.ForegroundColor = consoleColour;

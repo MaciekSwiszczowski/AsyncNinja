@@ -24,7 +24,5 @@ namespace Scenarios
 
             Console.WriteLine($"Ended: {message} on ThreadId: {Thread.CurrentThread.ManagedThreadId}");
         }
-        
-        
     }
 }

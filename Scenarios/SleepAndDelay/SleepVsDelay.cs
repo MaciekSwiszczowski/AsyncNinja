@@ -4,9 +4,7 @@ using static Scenarios.Helper;
 
 namespace Scenarios.SleepAndDelay
 {
-
     ///<image url="$(SolutionDir)\Scenarios\SleepAndDelay\SleepAndDelay.png" />
-
     public class SleepVsDelay : IRunnable
     {
         public string Title { get; } = "Sleep() vs Delay()";
@@ -21,11 +19,11 @@ namespace Scenarios.SleepAndDelay
 
             EndSpan("Thread.Sleep()");
 
-            
+
             StartSpan("Task.Delay()");
 
             await Task.Delay(DefDelay);
-                
+
             EndSpan("Task.Delay()");
         }
     }

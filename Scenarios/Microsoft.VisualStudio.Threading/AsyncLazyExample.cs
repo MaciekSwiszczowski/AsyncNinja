@@ -9,12 +9,12 @@ namespace Scenarios.Microsoft.VisualStudio.Threading
         public string Title { get; } = "AsyncLazy() example";
         public int Order { get; } = 1000;
         public string Comment { get; } = "Microsoft.VisualStudio.Threading goodies: AsyncLazy()";
+
         public Task RunAsync()
         {
             var lazySlowClass = new AsyncLazy<Slow>(() => new Task<Slow>(() => new Slow()));
-            
+
             return Task.CompletedTask;
-           
         }
 
         private async Task DoWorkAsync()
@@ -29,7 +29,5 @@ namespace Scenarios.Microsoft.VisualStudio.Threading
                 Thread.Sleep(Helper.DefDelay);
             }
         }
-
-
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -18,7 +17,6 @@ namespace Scenarios
 
         private static async Task Main()
         {
-            
             // TCS example!
 
 
@@ -35,7 +33,7 @@ namespace Scenarios
                 await RunUnderProfiler(runnables);
                 return;
             }
-            
+
             PrintMenu(runnables);
 
             int? item = null;
@@ -52,7 +50,7 @@ namespace Scenarios
                         Console.Clear();
                         PrintMenu(runnables);
                         break;
-                        
+
                     case "exit":
                     case "e":
                         return;
@@ -61,7 +59,7 @@ namespace Scenarios
                         _runOnUiThread = false;
                         Console.WriteLine("Examples will be run on a background thread.");
                         break;
-                        
+
                     case "u":
                         _runOnUiThread = true;
                         Console.WriteLine("Examples will be run on a UI thread.");
@@ -91,13 +89,9 @@ namespace Scenarios
                 try
                 {
                     if (_runOnUiThread)
-                    {
                         RunInWpfSyncContext(() => runnable.RunAsync());
-                    }
                     else
-                    {
                         await runnable.RunAsync();
-                    }
 
                     //Console.WriteLine("GC: Collecting AFTER example was run");
                     //GC.Collect();
@@ -113,7 +107,6 @@ namespace Scenarios
                 Console.ForegroundColor = ConsoleColor.Green;
                 PrintMenu(runnables);
             }
-
 
 
             // there is an extension for that!
@@ -179,25 +172,19 @@ namespace Scenarios
             //  Async void lambda functions -> http://tomasp.net/blog/csharp-async-gotchas.aspx/ Gotcha #4: Async void lambda functions
 
             Console.ReadKey();
-
         }
 
         private static void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
-            
             e.SetObserved();
         }
 
         private static async Task RunUnderProfiler(Dictionary<int, IRunnable> runnables)
         {
             if (_runOnUiThread)
-            {
                 RunInWpfSyncContext(() => RerunExample(runnables));
-            }
             else
-            {
                 await RerunExample(runnables);
-            }
         }
 
         private static Task RerunExample(Dictionary<int, IRunnable> runnables)
@@ -227,7 +214,7 @@ namespace Scenarios
         private static void PrintMenu(Dictionary<int, IRunnable> runnables)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            
+
             var longest = runnables.Values.Max(d => d.Title.Length) + 12;
             var fullWidthLine = $"|{string.Join("=", Enumerable.Repeat(string.Empty, longest * 2))}|";
 
@@ -247,20 +234,11 @@ namespace Scenarios
             for (var i = 0; i < half; i++)
             {
                 var left = runnables.ElementAtOrDefault(i);
-                if (left.Equals(default))
-                {
-                    break;
-                }
+                if (left.Equals(default)) break;
                 var right = runnables.ElementAtOrDefault(i + half);
-                if (right.Equals(default))
-                {
-                    break;
-                }
+                if (right.Equals(default)) break;
 
-                if (left.Key == right.Key)
-                {
-                    continue;
-                }
+                if (left.Key == right.Key) continue;
                 var leftString = $" ({PadBoth(left.Key.ToString(), 5)}) {left.Value.Title}";
                 var rightString = $"({PadBoth(right.Key.ToString(), 5)}) {right.Value.Title}";
                 Console.WriteLine($"{leftString.PadRight(longest)}{rightString}");
@@ -284,6 +262,44 @@ namespace Scenarios
             return source.PadLeft(padLeft).PadRight(length);
         }
 
+        // Not perfect - Concurrency Visualizer shows as WPF task
+        // but can use Dispatcher.CurrentDispatcher.BeginInvoke !!!
+        // refactor to tests?
+        /*
+         * https://stackoverflow.com/a/14160254/275330
+         */
+
+        public static void RunInWpfSyncContext(Action action)
+        {
+            RunInWpfSyncContext(() => Task.Run(action));
+        }
+
+        public static void RunInWpfSyncContext(Func<Task> function)
+        {
+            SynchronizationContext.Current.ShouldBeNull();
+
+            var prevCtx = SynchronizationContext.Current;
+            try
+            {
+                var syncCtx = new DispatcherSynchronizationContext();
+                SynchronizationContext.SetSynchronizationContext(syncCtx);
+
+                var task = function();
+
+                if (task == null) throw new InvalidOperationException();
+
+                var frame = new DispatcherFrame();
+                task.ContinueWith(x => frame.Continue = false, TaskScheduler.Default);
+                Dispatcher.PushFrame(frame); // execute all tasks until frame.Continue == false
+
+                task.GetAwaiter().GetResult(); // rethrow exception when task has failed 
+            }
+            finally
+            {
+                SynchronizationContext.SetSynchronizationContext(prevCtx);
+            }
+        }
+
         private class TestScenarios
         {
             private static readonly Dictionary<string, Span> Spans = new Dictionary<string, Span>();
@@ -305,7 +321,6 @@ namespace Scenarios
             {
                 RunInWpfSyncContext(async () =>
                 {
-
                     const string message = "No Config.Await()";
                     Console.WriteLine($"Starting {message}");
                     var messageSpan = Markers.EnterSpan(message);
@@ -322,53 +337,53 @@ namespace Scenarios
                 });
             }
 
-            private Task AwaitWithoutAsyncCleverHack()
-            {
-                Console.WriteLine("Starting");
-                var messageSpan = Markers.EnterSpan("Before task.Wait()");
+            //private Task AwaitWithoutAsyncCleverHack()
+            //{
+            //    Console.WriteLine("Starting");
+            //    var messageSpan = Markers.EnterSpan("Before task.Wait()");
 
-                var task = AsyncDelay();
+            //    var task = DelayAsync();
 
-                messageSpan.Leave();
-                Console.WriteLine("task.Wait()");
+            //    messageSpan.Leave();
+            //    Console.WriteLine("task.Wait()");
 
-                messageSpan = Markers.EnterSpan("task.Wait()");
+            //    messageSpan = Markers.EnterSpan("task.Wait()");
 
-                task.Wait();
+            //    task.Wait();
 
-                messageSpan.Leave();
-                Console.WriteLine("end");
+            //    messageSpan.Leave();
+            //    Console.WriteLine("end");
 
-                return task;
-            }
+            //    return task;
+            //}
 
-            public void MyLittleDeadlock()
-            {
-                SynchronizationContext.Current.ShouldBeNull();
+            //public void MyLittleDeadlock()
+            //{
+            //    SynchronizationContext.Current.ShouldBeNull();
 
-                RunInWpfSyncContext(AwaitWithoutAsyncCleverHack);
+            //    RunInWpfSyncContext(AwaitWithoutAsyncCleverHack);
 
-                // will work with ConfigureAwait
+            //    // will work with ConfigureAwait
 
-                //Task.Factory.StartNew(
-                //    AwaitWithoutAsyncCleverHack,
-                //    CancellationToken.None,
-                //    TaskCreationOptions.None,
-                //    TaskScheduler.FromCurrentSynchronizationContext());
-            }
+            //    //Task.Factory.StartNew(
+            //    //    AwaitWithoutAsyncCleverHack,
+            //    //    CancellationToken.None,
+            //    //    TaskCreationOptions.None,
+            //    //    TaskScheduler.FromCurrentSynchronizationContext());
+            //}
 
 
-            public Task AsyncToSyncCorrectly()
-            {
-                StartSpan("AsyncToSyncCorrectly()");
+            //public Task AsyncToSyncCorrectly()
+            //{
+            //    StartSpan("AsyncToSyncCorrectly()");
 
-                var t = Task.Run(() => AsyncDelay());
-                t.Wait();
+            //    var t = Task.Run(() => DelayAsync());
+            //    t.Wait();
 
-                EndSpan("AsyncToSyncCorrectly()");
+            //    EndSpan("AsyncToSyncCorrectly()");
 
-                return t;
-            }
+            //    return t;
+            //}
 
             public async void ContinueWithSimpleCase()
             {
@@ -387,18 +402,9 @@ namespace Scenarios
 
             public async void ContinueWith_BetterVersion_NotWorking()
             {
-                await AsyncDelay().ContinueWith(async _ => await AsyncDelay());
+                await DelayAsync().ContinueWith(async _ => await DelayAsync());
             }
 
-
-            public async Task AwaitAwait()
-            {
-                StartSpan("AwaitAwait()");
-                var result = await await GetAsyncValue();
-
-                await Console.Out.WriteLineAsync(result);
-                EndSpan("AwaitAwait()");
-            }
 
             public void AnotherDeadlock()
             {
@@ -419,34 +425,13 @@ namespace Scenarios
             }
 
 
-            public async void ConfigAwaitWrongly()
-            {
-                StartSpan("ConfigAwaitWrongly()");
-
-                var observableCollection = new ObservableCollection<string>();
-
-                await Task.Delay(1000).ConfigureAwait(false);
-
-                observableCollection.Add("Yay!");
-
-
-                EndSpan("ConfigAwaitWrongly()");
-            }
-
-
-            private async Task<Task<string>> GetAsyncValue()
-            {
-                await Task.Delay(_defDelay);
-
-                return Task.FromResult("Result from GetAsyncValue()");
-            }
-
-            private void DoSomeWork()
+            private static void DoSomeWork()
             {
                 StartSpan("Do some work");
                 Thread.Sleep(TimeSpan.FromSeconds(1));
                 EndSpan("Do some work");
             }
+
             private static void StartSpan(string message)
             {
                 Console.WriteLine($"Before: {message} on ThreadId: {Thread.CurrentThread.ManagedThreadId}");
@@ -461,7 +446,7 @@ namespace Scenarios
             }
 
 
-            private static async Task AsyncDelay()
+            private static async Task DelayAsync()
             {
                 StartSpan("Delay()");
 
@@ -469,55 +454,6 @@ namespace Scenarios
 
                 EndSpan("Delay()");
             }
-
-            private static Task<int> GetValueAsync()
-            {
-                Console.WriteLine("Starting Task.Delay()");
-
-                return Task.FromResult(13);
-            }
-
-            
-
-        }
-
-        // Not perfect - Concurrency Visualizer shows as WPF task
-        // but can use Dispatcher.CurrentDispatcher.BeginInvoke !!!
-        // refactor to tests?
-        /*
-         * https://stackoverflow.com/a/14160254/275330
-         */
-
-        public static void RunInWpfSyncContext(Action action)
-        {
-            RunInWpfSyncContext(() => Task.Run(action));
-        }
-        public static void RunInWpfSyncContext(Func<Task> function)
-        {
-            SynchronizationContext.Current.ShouldBeNull();
-
-            var prevCtx = SynchronizationContext.Current;
-            try
-            {
-                var syncCtx = new DispatcherSynchronizationContext();
-                SynchronizationContext.SetSynchronizationContext(syncCtx);
-                
-
-                var task = function();
-
-                if (task == null) throw new InvalidOperationException();
-
-                var frame = new DispatcherFrame();
-                task.ContinueWith(x => frame.Continue = false, TaskScheduler.Default);
-                Dispatcher.PushFrame(frame);   // execute all tasks until frame.Continue == false
-
-                task.GetAwaiter().GetResult(); // rethrow exception when task has failed 
-            }
-            finally
-            {
-                SynchronizationContext.SetSynchronizationContext(prevCtx);
-            }
         }
     }
-
 }

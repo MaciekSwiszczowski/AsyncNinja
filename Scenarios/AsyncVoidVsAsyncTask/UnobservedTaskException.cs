@@ -3,12 +3,15 @@ using System.Threading.Tasks;
 
 namespace Scenarios.AsyncVoidVsAsyncTask
 {
-    class UnobservedTaskException : IRunnable
+    internal class UnobservedTaskException : IRunnable
     {
         public string Title { get; } = "unobserved exceptions";
         public int Order { get; } = 301;
-        public string Comment { get; } = "It's possible to catch unobserved exceptions by subscribing to TaskScheduler.UnobservedTaskException. They will be handled " +
-                                         "in unknown future - after GC collection and finalization";
+
+        public string Comment { get; } =
+            "It's possible to catch unobserved exceptions by subscribing to TaskScheduler.UnobservedTaskException. They will be handled " +
+            "in unknown future - after GC collection and finalization";
+
         public async Task RunAsync()
         {
             TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;

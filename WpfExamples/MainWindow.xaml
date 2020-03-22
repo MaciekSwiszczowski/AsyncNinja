@@ -6,8 +6,8 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="InvokeAsync() and friends" Height="700" Width="1100"
-        
-        
+
+
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -15,80 +15,26 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
-        
+
     <DockPanel>
-        <materialDesign:Card Padding="32" 
+        <materialDesign:Card Padding="32"
                              Margin="16"
                              DockPanel.Dock="Top">
 
             <UniformGrid Rows="2">
 
-                <Viewbox >
+                <Viewbox>
                     <Button Content="Start simulating heavy load"
                             Margin="5"
                             Click="OnCreateHeavyLoad" />
-                </Viewbox>                
+                </Viewbox>
                 <Button Content="Stop simulating heavy load"
                         Margin="5"
-                        Click="OnStopHeavyLoad"
-                        />
+                        Click="OnStopHeavyLoad" />
                 <TextBlock Text="{Binding ElementsInDispacherQueue, StringFormat={}Elements waiting: {0}}"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
-                           Style="{DynamicResource MaterialDesignTitleTextBlock}"/>
-
-                <DockPanel LastChildFill="True">
-                    
-                    <TextBlock Text="Dispatcher priority: "
-                             DockPanel.Dock="Left"
-                             VerticalAlignment="Center"
-                             Margin="3"
-                             />
-                    
-                    <ComboBox ItemsSource="{Binding DispatcherPriorities}"
-                              SelectedItem="{Binding SelectedDispatcherPriority}" 
-                              VerticalAlignment="Center"
-                              Margin="3"
-                              />
-                </DockPanel>
-                
-                
-            </UniformGrid>
-        </materialDesign:Card>
-
-        <materialDesign:Card Padding="32" 
-                             Margin="16,0,0,16"
-                             DockPanel.Dock="Left"
-                             UniformCornerRadius="16"
-                             >
-
-            <UniformGrid Columns="1">
-                <Button Content="Add elements with Dispatcher.Invoke()"
-                        Margin="5"
-                        Click="OnAddWithInvoke"
-                        x:Name="InvokeButton"
-                        />
-
-                <Button Content="Add elements with Dispatcher.BeginInvoke()"
-                        Margin="5"
-                        Click="OnAddWithBeginInvoke"
-                        x:Name="BeginInvokeButton"
-                        />
-
-                <Button Content="Add elements with Dispatcher.InvokeAsync()"
-                        Margin="5"
-                        Click="OnAddWithBeginInvokeAsync"
-                        x:Name="InvokeAsyncButton"
-                        />
-
-                <Button Content="Add elements with Dispatcher.InvokeAsync() and Task.WhenAll"
-                        Margin="5"
-                        Click="OnAddWithBeginInvokeAsyncAndWhenAll"
-                        x:Name="WhenAllButton"
-                        />
-                
-                <ProgressBar IsIndeterminate="True" 
-                             Height="20"/>
+                           Style="{DynamicResource MaterialDesignTitleTextBlock}" />
 
                 <DockPanel LastChildFill="True">
 
@@ -98,7 +44,53 @@
                                Margin="3" />
 
                     <ComboBox ItemsSource="{Binding DispatcherPriorities}"
-                              SelectedItem="{Binding SelectedAddNewItemPriority}" 
+                              SelectedItem="{Binding SelectedDispatcherPriority}"
+                              VerticalAlignment="Center"
+                              Margin="3" />
+                </DockPanel>
+
+
+            </UniformGrid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Padding="32"
+                             Margin="16,0,0,16"
+                             DockPanel.Dock="Left"
+                             UniformCornerRadius="16">
+
+            <UniformGrid Columns="1">
+                <Button Content="Add elements with Dispatcher.Invoke()"
+                        Margin="5"
+                        Click="OnAddWithInvoke"
+                        x:Name="InvokeButton" />
+
+                <Button Content="Add elements with Dispatcher.BeginInvoke()"
+                        Margin="5"
+                        Click="OnAddWithBeginInvoke"
+                        x:Name="BeginInvokeButton" />
+
+                <Button Content="Add elements with Dispatcher.InvokeAsync()"
+                        Margin="5"
+                        Click="OnAddWithBeginInvokeAsync"
+                        x:Name="InvokeAsyncButton" />
+
+                <Button Content="Add elements with Dispatcher.InvokeAsync() and Task.WhenAll"
+                        Margin="5"
+                        Click="OnAddWithBeginInvokeAsyncAndWhenAll"
+                        x:Name="WhenAllButton" />
+
+                <ProgressBar IsIndeterminate="True"
+                             Height="20" />
+
+                <DockPanel LastChildFill="True">
+
+                    <TextBlock Text="Dispatcher priority: "
+                               DockPanel.Dock="Left"
+                               VerticalAlignment="Center"
+                               Margin="3" />
+
+                    <ComboBox ItemsSource="{Binding DispatcherPriorities}"
+                              SelectedItem="{Binding SelectedAddNewItemPriority}"
                               VerticalAlignment="Center"
                               Margin="3" />
                 </DockPanel>
@@ -106,14 +98,14 @@
             </UniformGrid>
         </materialDesign:Card>
 
-        <materialDesign:Card Padding="32" 
+        <materialDesign:Card Padding="32"
                              Margin="16,0,16,16"
                              DockPanel.Dock="Right">
             <ItemsControl x:Name="ListView"
-                          ItemsSource="{Binding Items}" >
+                          ItemsSource="{Binding Items}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid/>
+                        <UniformGrid />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
@@ -126,8 +118,7 @@
                                 MinHeight="50"
                                 Background="{Binding }"
                                 UseLayoutRounding="True"
-                                SnapsToDevicePixels="True"
-                                />
+                                SnapsToDevicePixels="True" />
                         </DockPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

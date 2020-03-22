@@ -8,16 +8,17 @@ namespace Scenarios.AsyncVoidVsAsyncTask
         public string Title { get; } = "Async void returns on await";
         public int Order { get; } = 304;
         public string Comment { get; } = "Async void returns on await.";
+
         public Task RunAsync()
         {
             // not awaited!!!
             AsyncVoidMethod();
 
-            
+
             // bonus - be aware of async lambdas!
-            Action     res1 = async () => await Task.Delay(100);
+            Action res1 = async () => await Task.Delay(100);
             Func<Task> res2 = async () => await Task.Delay(100);
-            
+
             return Task.CompletedTask;
         }
 

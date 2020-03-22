@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using static System.Console;
@@ -9,24 +8,21 @@ namespace Scenarios.WhenAll
 {
     public class MultipleExceptions : IRunnable
     {
-        private Barrier _barrier;
         private const int NumberOfTasks = 10;
+        private Barrier _barrier;
 
-        
+
         public string Title { get; } = "Catching exceptions with WhenAll (and Barrier)";
         public int Order { get; } = 400;
         public string Comment { get; } = "How to catch all exceptions. ";
 
-        
+
         public async Task RunAsync()
         {
             _barrier = new Barrier(NumberOfTasks);
 
             var tasks = new List<Task>();
-            for (var i = 0; i < NumberOfTasks; i++)
-            {
-                tasks.Add(ThrowExceptionFromTask());
-            }
+            for (var i = 0; i < NumberOfTasks; i++) tasks.Add(ThrowExceptionFromTask());
 
 
             var allTasks = Task.WhenAll(tasks);
@@ -56,7 +52,7 @@ namespace Scenarios.WhenAll
 
                 _barrier.SignalAndWait();
 
-                WriteLine($"Went through the barrier.");
+                WriteLine("Went through the barrier.");
 
                 throw new InvalidOperationException();
             });

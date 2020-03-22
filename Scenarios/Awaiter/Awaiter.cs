@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace Scenarios.Awaiter
 {
@@ -12,7 +13,9 @@ namespace Scenarios.Awaiter
     {
         public string Title { get; } = "Awaiter";
         public int Order { get; } = 600;
-        public string Comment { get; } = "Awaiter that changes to UI context. Non production code. Useful for csi.exe (?)";
+
+        public string Comment { get; } =
+            "Awaiter that changes to UI context. Non production code. Useful for csi.exe (?)";
 
         public async Task RunAsync()
         {
@@ -30,7 +33,7 @@ namespace Scenarios.Awaiter
             var newWindowThread = new Thread(() =>
             {
                 window = new Window();
-                t = new TextBox { Text = $"{SynchronizationContext.Current == null}" };
+                t = new TextBox {Text = $"{SynchronizationContext.Current == null}"};
                 window.Content = t;
                 window.Topmost = true;
                 window.Width = 300;
@@ -39,8 +42,7 @@ namespace Scenarios.Awaiter
 
                 Console.WriteLine($@"New window ThreadId: {Thread.CurrentThread.ManagedThreadId}");
 
-                System.Windows.Threading.Dispatcher.Run();
-
+                Dispatcher.Run();
             });
 
             newWindowThread.SetApartmentState(ApartmentState.STA);
@@ -57,8 +59,8 @@ namespace Scenarios.Awaiter
 
             Console.WriteLine($@"after await ThreadId: {Thread.CurrentThread.ManagedThreadId}");
 
-            await window.Dispatcher.InvokeAsync(() => Debug.WriteLine($@"Dispatcher ThreadId: {Thread.CurrentThread.ManagedThreadId}"));
-
+            await window.Dispatcher.InvokeAsync(() =>
+                Debug.WriteLine($@"Dispatcher ThreadId: {Thread.CurrentThread.ManagedThreadId}"));
 
 
             await Task.Delay(1000);
@@ -81,7 +83,9 @@ namespace Scenarios.Awaiter
             _control.Dispatcher.BeginInvoke(continuation);
         }
 
-        public void GetResult() { }
+        public void GetResult()
+        {
+        }
     }
 
     public static class Extension
@@ -91,6 +95,4 @@ namespace Scenarios.Awaiter
             return new ControlAwaiter(control);
         }
     }
-
-
 }
