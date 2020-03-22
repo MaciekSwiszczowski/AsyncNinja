@@ -20,7 +20,7 @@ namespace WpfExamples
         private readonly int _maxElements = 306;
         private readonly Random _random = new Random();
         private int _elementsDisplayed;
-        private int _elementsInDispacherQueue;
+        private int _elementsInDispatcherQueue;
         private int _elementsPushedToDispatcher;
 
         private bool _heavyLoadStarted;
@@ -52,10 +52,10 @@ namespace WpfExamples
 
         public int ElementsInDispacherQueue
         {
-            get => _elementsInDispacherQueue;
+            get => _elementsInDispatcherQueue;
             set
             {
-                _elementsInDispacherQueue = value;
+                _elementsInDispatcherQueue = value;
                 OnPropertyChanged();
             }
         }

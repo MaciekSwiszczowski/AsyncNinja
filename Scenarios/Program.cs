@@ -5,21 +5,17 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using Microsoft.ConcurrencyVisualizer.Instrumentation;
 using Scenarios.Properties;
 using Shouldly;
 
 namespace Scenarios
 {
-    internal class Program
+    internal static class Program
     {
         private static bool _runOnUiThread = true;
 
         private static async Task Main()
         {
-            // TCS example!
-
-
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-En");
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-En");
 
@@ -37,12 +33,11 @@ namespace Scenarios
             PrintMenu(runnables);
 
             int? item = null;
-            // TODO: use ReadLineAsync!
             while (true)
             {
-                var line = Console.In.ReadLine()?.ToLowerInvariant();
+                var line = await Console.In.ReadLineAsync();
 
-                switch (line?.ToLower())
+                switch (line?.ToLowerInvariant())
                 {
                     case "clear":
                     case "c":
@@ -92,12 +87,6 @@ namespace Scenarios
                         RunInWpfSyncContext(() => runnable.RunAsync());
                     else
                         await runnable.RunAsync();
-
-                    //Console.WriteLine("GC: Collecting AFTER example was run");
-                    //GC.Collect();
-                    //Console.WriteLine("GC: WaitForPendingFinalizers AFTER example was run");
-                    //GC.WaitForPendingFinalizers();
-                    //Console.WriteLine("GC: Collected");
                 }
                 catch (Exception e)
                 {
@@ -108,70 +97,6 @@ namespace Scenarios
                 PrintMenu(runnables);
             }
 
-
-            // there is an extension for that!
-            // 3. ConfigureAwait(true)
-            // 4. ConfigureAwait(false) - in SychronizationContext 
-            //  - Tests will behave differently
-            //  - When called after await on UI thread, then continuation will not execute on the same thread. 
-            //    So always do that if this (is possible), as it will lower the pressure on UI thread.
-            // 4. ConfigureAwait(false) - no SychronizationContext
-            //
-            //
-            // 5. (No ConfigureAwait()).ConfigureAwait(false)
-
-            // 6. ContinueWith
-            // 7. ContinueWith(Sequential)
-
-            // 8. MyFirstLittleDeadlock
-            // the same pattern with ASP .NET: (https://blogs.msdn.microsoft.com/alazarev/2017/05/20/fun-with-configureawait-and-deadlocks-in-asp-net/) // how async Task returns string???
-
-
-            // 9. Async to sync -> correctly this time
-
-            // Task<dynamic> ??? // https://stackoverflow.com/questions/22675446/json-net-deserialize-directly-from-a-stream-to-a-dynamic
-
-
-            var tests = new TestScenarios();
-
-
-            //tests.ConfigureAwaitTrue();
-            //tests.ConfigureAwaitFalse();
-
-            //tests.AwaitWithoutAsyncCleverHack();
-
-            //tests.MyLittleDeadlock();
-
-            //tests.ContinueWithSimpleCase();
-            //tests.ContinueWith_BetterVersion_NotWorking();
-            //tests.ContinueWith_ExecuteSynchronouslyFlag();
-
-            //tests.AsyncToSyncCorrectly();
-            //RunInWpfSyncContext(() => tests.AsyncToSyncCorrectly()); 
-
-            //tests.AwaitAwait();
-
-            //tests.AnotherDeadlock();
-            // RunInWpfSyncContext(() => tests.AnotherDeadlock()); // not working without WPF
-
-            // https://www.youtube.com/watch?v=bda13k0vfc0 58:00 -> avoid too much await -> return simply Task, without await. Use await if you really want to await sth
-
-            //RunInWpfSyncContext(() => tests.ConfigAwaitWrongly());
-
-
-            // configure await - show it's only local
-
-            // slim semaphor
-            // Dispatcher jako awaiter?
-            // Task.Factory.FromAsync(t.Ended.BeginInvoke, SearchRequest.EndInvoke) - czeka na wykonanie wszystkich handlerów
-            // https://www.youtube.com/watch?v=jgxJbshvCXQ -- 33:00 ??? Przeanalizować
-            // awaiting event: https://www.youtube.com/watch?v=jgxJbshvCXQ -- 41:33
-
-            // await Task.Yield(); //???
-
-            //  Async void lambda functions -> http://tomasp.net/blog/csharp-async-gotchas.aspx/ Gotcha #4: Async void lambda functions
-
-            Console.ReadKey();
         }
 
         private static void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
@@ -269,10 +194,10 @@ namespace Scenarios
          * https://stackoverflow.com/a/14160254/275330
          */
 
-        public static void RunInWpfSyncContext(Action action)
-        {
-            RunInWpfSyncContext(() => Task.Run(action));
-        }
+        //public static void RunInWpfSyncContext(Action action)
+        //{
+        //    RunInWpfSyncContext(() => Task.Run(action));
+        //}
 
         public static void RunInWpfSyncContext(Func<Task> function)
         {
@@ -297,162 +222,6 @@ namespace Scenarios
             finally
             {
                 SynchronizationContext.SetSynchronizationContext(prevCtx);
-            }
-        }
-
-        private class TestScenarios
-        {
-            private static readonly Dictionary<string, Span> Spans = new Dictionary<string, Span>();
-            private readonly TimeSpan _defDelay = TimeSpan.FromSeconds(1);
-
-
-            /*
-             * If there is a SynchronizationContext (i.e. we are in the UI thread) the code after an await will run in the original thread context. 
-             * 
-             * 
-             * 
-             * 
-             * or: https://stackoverflow.com/questions/16916253/how-to-get-a-task-that-uses-synchronizationcontext-and-how-are-synchronizationc
-             * 
-             */
-
-
-            public void ConfigureAwaitFalse()
-            {
-                RunInWpfSyncContext(async () =>
-                {
-                    const string message = "No Config.Await()";
-                    Console.WriteLine($"Starting {message}");
-                    var messageSpan = Markers.EnterSpan(message);
-
-                    await Task.Delay(1000).ConfigureAwait(true);
-
-                    messageSpan.Leave();
-                    Console.WriteLine($"The end of: {message}");
-
-
-                    var span = Markers.EnterSpan("Thread.Sleep()");
-                    Thread.Sleep(TimeSpan.FromSeconds(1));
-                    span.Leave();
-                });
-            }
-
-            //private Task AwaitWithoutAsyncCleverHack()
-            //{
-            //    Console.WriteLine("Starting");
-            //    var messageSpan = Markers.EnterSpan("Before task.Wait()");
-
-            //    var task = DelayAsync();
-
-            //    messageSpan.Leave();
-            //    Console.WriteLine("task.Wait()");
-
-            //    messageSpan = Markers.EnterSpan("task.Wait()");
-
-            //    task.Wait();
-
-            //    messageSpan.Leave();
-            //    Console.WriteLine("end");
-
-            //    return task;
-            //}
-
-            //public void MyLittleDeadlock()
-            //{
-            //    SynchronizationContext.Current.ShouldBeNull();
-
-            //    RunInWpfSyncContext(AwaitWithoutAsyncCleverHack);
-
-            //    // will work with ConfigureAwait
-
-            //    //Task.Factory.StartNew(
-            //    //    AwaitWithoutAsyncCleverHack,
-            //    //    CancellationToken.None,
-            //    //    TaskCreationOptions.None,
-            //    //    TaskScheduler.FromCurrentSynchronizationContext());
-            //}
-
-
-            //public Task AsyncToSyncCorrectly()
-            //{
-            //    StartSpan("AsyncToSyncCorrectly()");
-
-            //    var t = Task.Run(() => DelayAsync());
-            //    t.Wait();
-
-            //    EndSpan("AsyncToSyncCorrectly()");
-
-            //    return t;
-            //}
-
-            public async void ContinueWithSimpleCase()
-            {
-                await Task
-                    .Run(() => DoSomeWork())
-                    .ContinueWith(_ => DoSomeWork());
-            }
-
-            public async Task ContinueWith_ExecuteSynchronouslyFlag()
-            {
-                await Task
-                    .Run(() => DoSomeWork())
-                    .ContinueWith(_ => DoSomeWork(), TaskContinuationOptions.ExecuteSynchronously);
-            }
-
-
-            public async void ContinueWith_BetterVersion_NotWorking()
-            {
-                await DelayAsync().ContinueWith(async _ => await DelayAsync());
-            }
-
-
-            public void AnotherDeadlock()
-            {
-                StartSpan("AnotherDeadlock()");
-                Task
-                    .Delay(_defDelay).ContinueWith(_ =>
-                    {
-                        StartSpan("Dispatcher.CurrentDispatcher.Invoke()");
-                        Dispatcher.CurrentDispatcher.Invoke(() =>
-                        {
-                            StartSpan("Called by Dispathcher");
-                            EndSpan("Called by Dispathcher");
-                        });
-                        EndSpan("Dispatcher.CurrentDispatcher.Invoke()");
-                    })
-                    .Wait();
-                EndSpan("AnotherDeadlock()");
-            }
-
-
-            private static void DoSomeWork()
-            {
-                StartSpan("Do some work");
-                Thread.Sleep(TimeSpan.FromSeconds(1));
-                EndSpan("Do some work");
-            }
-
-            private static void StartSpan(string message)
-            {
-                Console.WriteLine($"Before: {message} on ThreadId: {Thread.CurrentThread.ManagedThreadId}");
-                Spans.Add(message, Markers.EnterSpan(message));
-            }
-
-            private static void EndSpan(string message)
-            {
-                Console.WriteLine($"Ended: {message} on ThreadId: {Thread.CurrentThread.ManagedThreadId}");
-                Spans[message].Leave();
-                Spans.Remove(message);
-            }
-
-
-            private static async Task DelayAsync()
-            {
-                StartSpan("Delay()");
-
-                await Task.Delay(1000);
-
-                EndSpan("Delay()");
             }
         }
     }
