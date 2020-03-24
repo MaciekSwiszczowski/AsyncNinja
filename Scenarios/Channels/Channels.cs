@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using static Scenarios.Helper;
 
 namespace Scenarios.Channels
 {
@@ -43,9 +44,14 @@ namespace Scenarios.Channels
                 for (var i = 0; i < 6; i++)
                 {
                     var index = i;
-                    Console.WriteLine($"Sending: {index}");
-                    await channel.Writer.WriteAsync(() => Console.WriteLine($"Action: {index}"));
-                    await Task.Delay(300);
+//                    Console.WriteLine($"Sending: {index}");
+                    
+                    StartSpan($"Sending {index}");
+
+                    await channel.Writer.WriteAsync(() => Console.WriteLine($"Action: {index}")).ConfigureAwait(true);
+                    await Task.Delay(300).ConfigureAwait(true);
+
+                    EndSpan($"Sending {index}");
                 }
 
                 channel.Writer.Complete();
@@ -56,8 +62,13 @@ namespace Scenarios.Channels
 
             await foreach (var i in channel.Reader.ReadAllAsync())
             {
-                Console.WriteLine($"New item received.");
+                StartSpan($"Receiving {i}");
+
+//                Console.WriteLine($"New item received.");
                 i.Invoke();
+
+                EndSpan($"Receiving {i}");
+
             }
 
             Console.WriteLine("All was read!");
