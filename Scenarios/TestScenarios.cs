@@ -77,8 +77,6 @@ namespace Scenarios
     // awaiting event: https://www.youtube.com/watch?v=jgxJbshvCXQ -- 41:33
 
 
-    //  Async void lambda functions -> http://tomasp.net/blog/csharp-async-gotchas.aspx/ Gotcha #4: Async void lambda functions
-
     public class TestScenarios
     {
         private static readonly Dictionary<string, Span> Spans = new Dictionary<string, Span>();

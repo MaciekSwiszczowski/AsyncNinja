@@ -3,31 +3,25 @@ using System.Threading.Tasks;
 
 namespace Scenarios.AsyncVoidVsAsyncTask
 {
+    // ReSharper disable once UnusedMember.Global
     public class AsyncVoidFlow : IRunnable
     {
         public string Title { get; } = "Async void returns on await";
         public Order Order { get; } = Order.AsyncVoidVsAsyncTask;
-        public string Comment { get; } = "Async void returns on await.";
+        public string Comment { get; } = "Async void returns on await. Some code will never be executed.";
 
         public Task RunAsync()
         {
             // not awaited!!!
             AsyncVoidMethod();
 
-
-            // bonus - be aware of async lambdas!
-            Action res1 = async () => await Task.Delay(100);
-            Func<Task> res2 = async () => await Task.Delay(100);
-
             return Task.CompletedTask;
         }
 
 
-        internal static async void AsyncVoidMethod()
+        private async void AsyncVoidMethod()
         {
-            Console.WriteLine();
             Console.WriteLine("1. begin async void method");
-            Console.WriteLine();
 
             await AsyncMethod();
 
