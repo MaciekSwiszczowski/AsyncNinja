@@ -98,7 +98,6 @@ namespace Scenarios
                 Console.ForegroundColor = ConsoleColor.Green;
                 PrintMenu(runnables);
             }
-
         }
 
         private static void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
@@ -190,7 +189,7 @@ namespace Scenarios
         }
 
         /*
-         * https://stackoverflow.com/a/14160254/275330
+         * source: https://stackoverflow.com/a/14160254/275330
          * Not perfect - Concurrency Visualizer shows as WPF task, but can use Dispatcher.CurrentDispatcher.BeginInvoke !!!
          */
         public static void RunInWpfSyncContext(Func<Task> function)

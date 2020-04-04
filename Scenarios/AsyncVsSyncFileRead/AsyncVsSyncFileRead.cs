@@ -4,17 +4,17 @@ using System.Text;
 using System.Threading.Tasks;
 using static Scenarios.Helper;
 
-namespace Scenarios.AsyncRead
+namespace Scenarios.AsyncVsSyncFileRead
 {
-    public class AsyncVsSyncFileRead : IRunnable
+    public class AsyncVsSyncFileRead //: IRunnable
     {
         public string Title { get; } = "Async vs sync file read";
-        public int Order { get; } = 1000;
+        public Order Order { get; } = Order.AsyncFileRead;
         public string Comment { get; } = "to do";
 
         public async Task RunAsync()
         {
-            var bufferSize = 1000000;
+            const int bufferSize = 1000000;
 
             StartSpan("Read async");
 

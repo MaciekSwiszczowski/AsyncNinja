@@ -4,22 +4,19 @@ using Microsoft.VisualStudio.Threading;
 
 namespace Scenarios.Microsoft.VisualStudio.Threading
 {
+    // ReSharper disable once UnusedMember.Global
     public class AsyncLazyExample : IRunnable
     {
-        public string Title { get; } = "AsyncLazy() example";
-        public int Order { get; } = 1000;
+        public string Title { get; } = "AsyncLazy (deadlock)";
+        public Order Order { get; } = Order.VisualStudioThreading;
+
         public string Comment { get; } = "Microsoft.VisualStudio.Threading goodies: AsyncLazy()";
 
-        public Task RunAsync()
+        public async Task RunAsync()
         {
             var lazySlowClass = new AsyncLazy<Slow>(() => new Task<Slow>(() => new Slow()));
 
-            return Task.CompletedTask;
-        }
-
-        private async Task DoWorkAsync()
-        {
-            await Task.Run(() => Thread.Sleep(Helper.DefDelay));
+            var slow = await lazySlowClass.GetValueAsync();
         }
 
         private class Slow

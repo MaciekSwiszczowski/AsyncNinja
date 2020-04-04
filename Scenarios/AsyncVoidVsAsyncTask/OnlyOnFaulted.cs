@@ -6,7 +6,8 @@ namespace Scenarios.AsyncVoidVsAsyncTask
     public class OnlyOnFaulted : IRunnable
     {
         public string Title { get; } = "ContinueWith with OnlyOnFaulted flag";
-        public int Order { get; } = 302;
+        public Order Order { get; } = Order.AsyncVoidVsAsyncTask;
+
         public string Comment { get; } = "Instead of try..catch() you can use ContinueWith with OnlyOnFaulted flag";
 
         public async Task RunAsync()

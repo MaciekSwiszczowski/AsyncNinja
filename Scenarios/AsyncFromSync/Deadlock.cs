@@ -8,7 +8,8 @@ namespace Scenarios.AsyncFromSync
     public class Deadlock : IRunnable
     {
         public string Title { get; } = "Async from sync - deadlock";
-        public int Order { get; } = 1001;
+        public Order Order { get; } = Order.AsyncFromSync;
+
         public string Comment { get; } = "This way you'll get a deadlock on a thread with a synchronization context";
 
         public async Task RunAsync()

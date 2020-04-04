@@ -8,7 +8,8 @@ namespace Scenarios.SleepAndDelay
     public class SleepVsDelay : IRunnable
     {
         public string Title { get; } = "Sleep() vs Delay()";
-        public int Order { get; } = 0;
+        public Order Order { get; } = Order.SleepVsDelay;
+
         public string Comment { get; } = "The basics: Thread.Sleep() vs Task.Delay()";
 
         public async Task RunAsync()

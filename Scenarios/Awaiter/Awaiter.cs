@@ -12,7 +12,7 @@ namespace Scenarios.Awaiter
     public class Awaiter : IRunnable
     {
         public string Title { get; } = "Awaiter";
-        public int Order { get; } = 600;
+        public Order Order { get; } = Order.Awaiter;
 
         public string Comment { get; } =
             "Awaiter that changes to UI context. Non production code. Useful for csi.exe (?)";

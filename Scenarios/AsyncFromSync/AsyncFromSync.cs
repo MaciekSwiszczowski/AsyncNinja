@@ -9,7 +9,7 @@ namespace Scenarios.AsyncFromSync
     public class AsyncFromSync : IRunnable
     {
         public string Title { get; } = "Async from sync";
-        public int Order { get; } = 1000;
+        public Order Order { get; } = Order.AsyncFromSync;
 
         public string Comment { get; } =
             "How to correctly (safely and without deadlocks) start an async method from a sync one?";

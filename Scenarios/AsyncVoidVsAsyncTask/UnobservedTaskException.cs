@@ -6,7 +6,8 @@ namespace Scenarios.AsyncVoidVsAsyncTask
     internal class UnobservedTaskException : IRunnable
     {
         public string Title { get; } = "unobserved exceptions";
-        public int Order { get; } = 301;
+        public Order Order { get; } = Order.AsyncVoidVsAsyncTask;
+
 
         public string Comment { get; } =
             "It's possible to catch unobserved exceptions by subscribing to TaskScheduler.UnobservedTaskException. They will be handled " +
@@ -16,13 +17,11 @@ namespace Scenarios.AsyncVoidVsAsyncTask
         {
             TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
 
-#pragma warning disable 4014 - we don't await this task intensionally
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 Console.WriteLine("Throwing an exception on not awaited task");
                 throw new InvalidOperationException();
             });
-#pragma warning restore 4014
 
             // Task.Tun() needs some time to run
             await Task.Delay(500);

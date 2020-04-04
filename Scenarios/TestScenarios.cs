@@ -72,8 +72,6 @@ namespace Scenarios
 
     // configure await - show it's only local
 
-    // slim semaphor
-    // Dispatcher jako awaiter?
     // Task.Factory.FromAsync(t.Ended.BeginInvoke, SearchRequest.EndInvoke) - czeka na wykonanie wszystkich handlerów
     // https://www.youtube.com/watch?v=jgxJbshvCXQ -- 33:00 ??? Przeanalizować
     // awaiting event: https://www.youtube.com/watch?v=jgxJbshvCXQ -- 41:33

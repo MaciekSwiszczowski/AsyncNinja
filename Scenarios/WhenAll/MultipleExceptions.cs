@@ -13,7 +13,8 @@ namespace Scenarios.WhenAll
 
 
         public string Title { get; } = "Catching exceptions with WhenAll (and Barrier)";
-        public int Order { get; } = 400;
+        public Order Order { get; } = Order.WhenAll;
+
         public string Comment { get; } = "How to catch all exceptions. ";
 
 

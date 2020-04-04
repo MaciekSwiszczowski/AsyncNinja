@@ -6,7 +6,7 @@ namespace Scenarios.AsyncVoidVsAsyncTask
     public class AsyncVoidFlow : IRunnable
     {
         public string Title { get; } = "Async void returns on await";
-        public int Order { get; } = 304;
+        public Order Order { get; } = Order.AsyncVoidVsAsyncTask;
         public string Comment { get; } = "Async void returns on await.";
 
         public Task RunAsync()

@@ -7,7 +7,7 @@ namespace Scenarios.AsyncVoidVsAsyncTask
     public class AsyncVoidVsAsyncTask : IRunnable
     {
         public string Title { get; } = "async void vs async task";
-        public int Order { get; } = 300;
+        public Order Order { get; } = Order.AsyncVoidVsAsyncTask;
 
         public string Comment { get; } = "async void methods are pure evil!" + Environment.NewLine +
                                          Environment.NewLine +

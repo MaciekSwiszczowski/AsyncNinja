@@ -12,7 +12,8 @@ namespace Scenarios.Channels
     public class Channels : IRunnable
     {
         public string Title { get; } = "Channels";
-        public int Order { get; } = 400;
+        public Order Order { get; } = Order.Channels;
+
         public string Comment { get; } = "Solves producer/consumer problems";
         public async Task RunAsync()
         {
