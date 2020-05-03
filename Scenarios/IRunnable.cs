@@ -15,11 +15,10 @@ namespace Scenarios
         SleepVsDelay,
         AsyncVoid,
         AsyncVoidVsAsyncTask,
-        WhenAll,
         AsyncFromSync,
         Awaiter,
         Channels,
         VisualStudioThreading,
-        AsyncFileRead
+        AsyncFileRead,
     }
 }

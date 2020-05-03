@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace Scenarios.AsyncVoidVsAsyncTask
 {
+    // ReSharper disable once UnusedMember.Global
     public class OnlyOnFaulted : IRunnable
     {
         public string Title { get; } = "ContinueWith with OnlyOnFaulted flag";
@@ -25,7 +26,7 @@ namespace Scenarios.AsyncVoidVsAsyncTask
                         foreach (var ex in val.Exception.Flatten().InnerExceptions)
                         {
                             Console.WriteLine();
-                            Console.WriteLine("Exception handled in ContinueWith. Exception is: >>{0}<<", ex.Message);
+                            Console.WriteLine($"Exception handled in ContinueWith. Exception is: >>{ex.Message}<<");
                             Console.WriteLine("End of handling with ContinueWith");
                             Console.WriteLine();
                         }

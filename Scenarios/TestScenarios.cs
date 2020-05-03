@@ -29,8 +29,13 @@ namespace Scenarios
     /// Microsoft.VisualStudio.Threading
     /// 
 
+    ///
+    /// https://github.com/TAGC/AsyncEvent
+    /// 
 
-
+    ///
+    /// SafeFireAndForget
+    /// 
 
 
 
@@ -42,11 +47,6 @@ namespace Scenarios
     //          All below => is to review
     //        --------------------------------------------
 
-
-
-    // the same pattern with ASP .NET: (https://blogs.msdn.microsoft.com/alazarev/2017/05/20/fun-with-configureawait-and-deadlocks-in-asp-net/) // how async Task returns string???
-
-    // Task<dynamic> ??? // https://stackoverflow.com/questions/22675446/json-net-deserialize-directly-from-a-stream-to-a-dynamic
 
 
     //tests.ConfigureAwaitTrue();
@@ -68,13 +68,6 @@ namespace Scenarios
     //tests.AnotherDeadlock();
     // RunInWpfSyncContext(() => tests.AnotherDeadlock()); // not working without WPF
     //RunInWpfSyncContext(() => tests.ConfigAwaitWrongly());
-
-
-    // configure await - show it's only local
-
-    // Task.Factory.FromAsync(t.Ended.BeginInvoke, SearchRequest.EndInvoke) - czeka na wykonanie wszystkich handlerów
-    // https://www.youtube.com/watch?v=jgxJbshvCXQ -- 33:00 ??? Przeanalizować
-    // awaiting event: https://www.youtube.com/watch?v=jgxJbshvCXQ -- 41:33
 
 
     public class TestScenarios
