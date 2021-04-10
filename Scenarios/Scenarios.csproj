@@ -32,8 +32,5 @@
       <Version>4.0.3</Version>
     </PackageReference>
     <PackageReference Include="System.Linq.Async" Version="5.0.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
-      <Version>6.0.0-preview.3.21201.4</Version>
-    </PackageReference>
   </ItemGroup>
 </Project>
