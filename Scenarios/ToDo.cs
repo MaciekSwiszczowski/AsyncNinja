@@ -26,7 +26,7 @@ namespace Scenarios
     /// 
 
     ///
-    /// Microsoft.VisualStudio.Threading
+    /// System.Linq.Async
     /// 
 
     ///
@@ -34,11 +34,12 @@ namespace Scenarios
     /// 
 
     ///
-    /// SafeFireAndForget
+    /// https://habr.com/en/post/454074/ DynamicData
+    ///
+
+    ///
+    /// ValueTask
     /// 
-
-
-
 
 
 
