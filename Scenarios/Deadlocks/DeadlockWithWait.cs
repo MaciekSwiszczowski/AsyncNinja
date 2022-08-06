@@ -3,14 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using static Scenarios.Helper;
 
-namespace Scenarios.AsyncFromSync
+namespace Scenarios.Deadlocks
 {
-    public class Deadlock : IRunnable
+    public class DeadlockWithWait : IRunnable
     {
-        public string Title { get; } = "Async from sync - deadlock";
-        public Order Order { get; } = Order.AsyncFromSync;
+        public string Title => "Deadlock with .Wait()";
+        public Order Order => Order.Deadlock;
 
-        public string Comment { get; } = "This way you'll get a deadlock on a thread with a synchronization context";
+        public string Comment => "This way you'll get a deadlock on a thread with a synchronization context";
 
         public async Task RunAsync()
         {
@@ -26,7 +26,7 @@ namespace Scenarios.AsyncFromSync
             {
                 EndSpan("Wait(500)");
 
-                Console.WriteLine("If not this timeout we'd have a deadlock.");
+                Console.WriteLine("You're on the UI thread. If not this timeout we'd have a deadlock.");
             }
         }
 

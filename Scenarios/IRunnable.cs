@@ -20,6 +20,7 @@ namespace Scenarios
         Channels,
         VisualStudioThreading,
         AsyncFileRead,
-        SystemLinqAsync
+        SystemLinqAsync,
+        Deadlock
     }
 }

@@ -6,6 +6,8 @@ using static Scenarios.Helper;
 
 namespace Scenarios.AsyncVsSyncFileRead
 {
+    // WORK IN PROGRESS
+    
     public class AsyncVsSyncFileRead //: IRunnable
     {
         public string Title { get; } = "Async vs sync file read";

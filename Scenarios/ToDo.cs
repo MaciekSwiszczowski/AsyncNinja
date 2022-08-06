@@ -8,6 +8,23 @@ using Microsoft.ConcurrencyVisualizer.Instrumentation;
 namespace Scenarios
 {
     // TODO
+    
+    ///
+    /// ThreadPool exhaustion
+    /// ThreadPool exhaustion + start Task as long running
+    ///
+
+    ///
+    /// Add project description on GitHub
+    /// 
+
+    ///
+    /// Fix: 'background' option not saved, not used in profiling mode
+    ///
+    
+    /// 
+    /// Extend IRunnable - add info if profiling info was added
+    /// 
 
     /// 
     /// Schedulers!
@@ -16,15 +33,7 @@ namespace Scenarios
     /// 
     /// Tests! https://www.youtube.com/watch?v=yapByx1gMCM
     ///
-
-    ///
-    /// Fix: 'background' option not saved, not used in profiling mode
-    ///
-
-    ///
-    /// Add project description on GitHub
-    /// 
-
+    
     ///
     /// System.Linq.Async
     /// 

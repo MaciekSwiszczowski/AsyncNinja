@@ -4,15 +4,14 @@ using System.Threading.Tasks;
 namespace Scenarios.AsyncFromSync
 {
     // more: https://github.com/StephenCleary/AsyncEx/wiki/AsyncContext
-    // https://github.com/StephenCleary/Mvvm.Async !!!
+    // https://github.com/StephenCleary/Mvvm.Async
 
     public class AsyncFromSync : IRunnable
     {
-        public string Title { get; } = "Async from sync";
-        public Order Order { get; } = Order.AsyncFromSync;
+        public string Title => "Async from sync";
+        public Order Order => Order.AsyncFromSync;
 
-        public string Comment { get; } =
-            "How to correctly (safely and without deadlocks) start an async method from a sync one?";
+        public string Comment => "How to correctly (safely and without deadlocks) start an async method from a sync one?";
 
         public async Task RunAsync()
         {
@@ -20,22 +19,28 @@ namespace Scenarios.AsyncFromSync
 
             Console.WriteLine("After RunSync().");
 
+            await Task.Delay(100);
+            
+            Console.WriteLine("After RunSync() and 100 ms delay.");
+            
             await Task.Delay(5000);
         }
 
-        private void RunSync()
+        private static void RunSync()
         {
             Task.Run(async () =>
             {
-                await Task.Delay(100);
+                Console.WriteLine("Before the delay in RunSync().");
+                
+                await Task.Delay(200);
 
-                Console.WriteLine("After the delay.");
+                Console.WriteLine("After the 200 ms delay.");
 
                 try
                 {
                     await MethodWithExceptionAsync();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Console.WriteLine("Exception from a different thread was caught");
                 }
@@ -47,9 +52,6 @@ namespace Scenarios.AsyncFromSync
             Console.WriteLine("After Task.Run().");
         }
 
-        private async Task MethodWithExceptionAsync()
-        {
-            await Task.Run(() => throw new Exception());
-        }
+        private static Task MethodWithExceptionAsync() => Task.Run(() => throw new Exception());
     }
 }
