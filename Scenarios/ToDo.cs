@@ -10,6 +10,13 @@ namespace Scenarios
     // TODO
     
     ///
+    /// `lock in async`
+    ///  deadlock with SemaphoreSlim?
+    ///  deadlock with .Result
+    ///  deadlock with Lazy<>, Dispatcher???
+    ///
+    
+    ///
     /// ThreadPool exhaustion
     /// ThreadPool exhaustion + start Task as long running
     ///

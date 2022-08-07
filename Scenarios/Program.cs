@@ -28,7 +28,7 @@ namespace Scenarios
 
             if (Settings.Default.RerunExample)
             {
-                await RunUnderProfiler(runnables);
+                await RunUnderProfilerAsync(runnables);
                 return;
             }
 
@@ -105,15 +105,15 @@ namespace Scenarios
             e.SetObserved();
         }
 
-        private static async Task RunUnderProfiler(Dictionary<int, IRunnable> runnables)
+        private static async Task RunUnderProfilerAsync(Dictionary<int, IRunnable> runnables)
         {
             if (_runOnUiThread)
-                RunInWpfSyncContext(() => RerunExample(runnables));
+                RunInWpfSyncContext(() => RerunExampleAsync(runnables));
             else
-                await RerunExample(runnables);
+                await RerunExampleAsync(runnables);
         }
 
-        private static Task RerunExample(Dictionary<int, IRunnable> runnables)
+        private static Task RerunExampleAsync(Dictionary<int, IRunnable> runnables)
         {
             Settings.Default[nameof(Settings.Default.RerunExample)] = false;
             Settings.Default.Save();
@@ -131,6 +131,7 @@ namespace Scenarios
             return typeof(Program).Assembly.GetTypes()
                 .Where(type => typeof(IRunnable).IsAssignableFrom(type) && type != typeof(IRunnable))
                 .Select(type => (IRunnable) Activator.CreateInstance(type))
+                .Where(t => t is not null)
                 .Select(t => new {t.Order, Runnable = t})
                 .OrderBy(i => i.Order)
                 .Select((i, j) => new {Order = j, i.Runnable})
@@ -148,8 +149,8 @@ namespace Scenarios
             Console.WriteLine(fullWidthLine);
             Console.WriteLine("m - Menu");
             Console.WriteLine("e - Exit");
-            Console.WriteLine("u - Run of UI thread (default)");
-            Console.WriteLine("b - Run of background thread");
+            Console.WriteLine("u - Run on UI thread (default)");
+            Console.WriteLine("b - Run on background thread");
             Console.WriteLine("p - Next time run in profiling mode");
 
             Console.WriteLine(fullWidthLine);
@@ -160,9 +161,7 @@ namespace Scenarios
             for (var i = 0; i < half; i++)
             {
                 var left = runnables.ElementAtOrDefault(i);
-                if (left.Equals(default)) break;
                 var right = runnables.ElementAtOrDefault(i + half);
-                if (right.Equals(default)) break;
 
                 if (left.Key == right.Key) continue;
                 var leftString = $" ({PadBoth(left.Key.ToString(), 5)}) {left.Value.Title}";
@@ -192,7 +191,7 @@ namespace Scenarios
          * source: https://stackoverflow.com/a/14160254/275330
          * Not perfect - Concurrency Visualizer shows as WPF task, but can use Dispatcher.CurrentDispatcher.BeginInvoke !!!
          */
-        public static void RunInWpfSyncContext(Func<Task> function)
+        private static void RunInWpfSyncContext(Func<Task> function)
         {
             SynchronizationContext.Current.ShouldBeNull();
 

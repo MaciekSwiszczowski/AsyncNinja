@@ -9,11 +9,11 @@ namespace Scenarios
     {
         public static readonly TimeSpan DefDelay = TimeSpan.FromSeconds(1);
 
-        private static readonly Dictionary<string, Span> Spans = new Dictionary<string, Span>();
+        private static readonly Dictionary<string, Span> Spans = new();
 
         public static void StartSpan(string message)
         {
-            Console.WriteLine($"Before: {message} on ThreadId: {Thread.CurrentThread.ManagedThreadId}");
+            Console.WriteLine($"Before: {message} on ThreadId: {Environment.CurrentManagedThreadId}");
             Spans.Add(message, Markers.EnterSpan(message));
         }
 
