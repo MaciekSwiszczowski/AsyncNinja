@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:wpfExamples="clr-namespace:WpfExamples"
         mc:Ignorable="d"
-        Title="InvokeAsync() and friends" Height="700" Width="1100"
-
+        d:DataContext="{d:DesignInstance wpfExamples:MainWindow}"
+        Title="InvokeAsync() and friends" Height="800" Width="1100"
 
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -31,7 +32,7 @@
                 <Button Content="Stop simulating heavy load"
                         Margin="5"
                         Click="OnStopHeavyLoad" />
-                <TextBlock Text="{Binding ElementsInDispacherQueue, StringFormat={}Elements waiting: {0}}"
+                <TextBlock Text="{Binding ElementsInDispatcherQueue, StringFormat={}Elements waiting: {0}}"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
                            Style="{DynamicResource MaterialDesignTitleTextBlock}" />
