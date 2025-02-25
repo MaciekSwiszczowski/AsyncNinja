@@ -21,6 +21,7 @@ namespace Scenarios
         VisualStudioThreading,
         AsyncFileRead,
         SystemLinqAsync,
-        Deadlock
+        Deadlock,
+        WhenAnyVsWhenEach,
     }
 }
