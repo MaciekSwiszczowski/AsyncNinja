@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Scenarios.WhenAnyVsWhenEach;
@@ -16,31 +16,30 @@ public sealed class WhenAnyVsWhenEach : IRunnable
     {
         Console.WriteLine("1. The old way of iterating over tasks. The least efficient. We have to wait for all tasks to finish.");
 
-        var results = await Task.WhenAll(DoRandomWorkAsync(), DoRandomWorkAsync(), DoRandomWorkAsync(), DoRandomWorkAsync(), DoRandomWorkAsync());
+        var results = await Task.WhenAll(Enumerable.Range(1, 8).Select(static _ => DoRandomWorkAsync()));
         foreach (var result in results)
         {
-            Console.WriteLine($"Got result: {result}");
+            Console.WriteLine($"Got result: {result}, ThreadId: {Environment.CurrentManagedThreadId}");
         }
 
         Console.WriteLine();
         Console.WriteLine("2. Now looping over the tasks with Task.WhenAny().");
 
-        List<Task<int>> tasks = [DoRandomWorkAsync(), DoRandomWorkAsync(), DoRandomWorkAsync(), DoRandomWorkAsync(), DoRandomWorkAsync()];
+        var tasks = Enumerable.Range(1, 8).Select(static _ => DoRandomWorkAsync()).ToList();
         while (tasks.Count != 0)
         {
             var finishedTask = await Task.WhenAny(tasks);
             tasks.Remove(finishedTask);
-            Console.WriteLine($"Got result: {await finishedTask}");
+            Console.WriteLine($"Got result: {await finishedTask}, ThreadId: {Environment.CurrentManagedThreadId}");
         }
         
         Console.WriteLine();
         Console.WriteLine("3. Now looping over the tasks with Task.WhenEach(). Simpler and more efficient.");
         
-        tasks = [DoRandomWorkAsync(), DoRandomWorkAsync(), DoRandomWorkAsync(), DoRandomWorkAsync(), DoRandomWorkAsync()];
-        
+        tasks = Enumerable.Range(1, 8).Select(static _ => DoRandomWorkAsync()).ToList();
         await foreach (var finishedTask in Task.WhenEach(tasks))
         {
-            Console.WriteLine($"Got result: {await finishedTask}");
+            Console.WriteLine($"Got result: {await finishedTask}, ThreadId: {Environment.CurrentManagedThreadId}");
         }
     }
 
