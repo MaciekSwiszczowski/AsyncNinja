@@ -7,10 +7,10 @@ namespace Scenarios.Microsoft.VisualStudio.Threading
     // ReSharper disable once UnusedMember.Global
     public class AsyncLazyExample : IRunnable
     {
-        public string Title { get; } = "AsyncLazy (deadlock)";
-        public Order Order { get; } = Order.VisualStudioThreading;
+        public string Title => "AsyncLazy (deadlock)";
+        public Order Order => Order.VisualStudioThreading;
 
-        public string Comment { get; } = "Microsoft.VisualStudio.Threading goodies: AsyncLazy()";
+        public string Comment => "Microsoft.VisualStudio.Threading goodies: AsyncLazy()";
 
         public async Task RunAsync()
         {
@@ -19,7 +19,7 @@ namespace Scenarios.Microsoft.VisualStudio.Threading
             var slow = await lazySlowClass.GetValueAsync();
         }
 
-        private class Slow
+        private sealed class Slow
         {
             public Slow()
             {
