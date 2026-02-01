@@ -23,5 +23,7 @@ namespace Scenarios
         SystemLinqAsync,
         Deadlock,
         WhenAnyVsWhenEach,
+        Reentrancy,
+        ThreadPoolStarvation,
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -88,9 +88,19 @@ internal static class Program
             try
             {
                 if (RunOnUiThread)
+                {
                     RunInWpfSyncContext(() => runnable.RunAsync());
+                }
                 else
-                    await runnable.RunAsync();
+                {
+                    await Task.Factory
+                        .StartNew(
+                            () => runnable.RunAsync(),
+                            CancellationToken.None,
+                            TaskCreationOptions.LongRunning,
+                            TaskScheduler.Default)
+                        .Unwrap();
+                }
             }
             catch (Exception e)
             {
