@@ -1,21 +1,19 @@
-﻿using System;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using static Scenarios.Helper;
 
-namespace Scenarios.AsyncVsSyncFileRead
-{
+namespace Scenarios.AsyncVsSyncFileRead;
+
     // WORK IN PROGRESS
     
-    public class AsyncVsSyncFileRead //: IRunnable
-    {
-        public string Title { get; } = "Async vs sync file read";
-        public Order Order { get; } = Order.AsyncFileRead;
-        public string Comment { get; } = "to do";
+public class AsyncVsSyncFileRead //: IRunnable
+{
+    public string Title { get; } = "Async vs sync file read";
+    public Order Order { get; } = Order.AsyncFileRead;
+    public string Comment { get; } = "to do";
 
-        public async Task RunAsync()
-        {
+    public async Task RunAsync()
+    {
             const int bufferSize = 1000000;
 
             StartSpan("Read async");
@@ -67,6 +65,5 @@ namespace Scenarios.AsyncVsSyncFileRead
             EndSpan("Read sync");
 
             Console.ForegroundColor = consoleColour;
-        }
     }
 }

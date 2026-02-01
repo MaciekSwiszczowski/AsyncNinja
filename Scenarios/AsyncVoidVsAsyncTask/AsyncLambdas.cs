@@ -1,8 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+namespace Scenarios.AsyncVoidVsAsyncTask;
 
-namespace Scenarios.AsyncVoidVsAsyncTask
-{
     /* http://tomasp.net/blog/csharp-async-gotchas.aspx/ - Gotcha #4: Async void lambda functions
     
     Parallel.For only has overloads that take Action delegates - and thus the lambda function will always be compiled as async void. 
@@ -13,30 +10,29 @@ namespace Scenarios.AsyncVoidVsAsyncTask
 
     */
 
-    // ReSharper disable once UnusedMember.Global
-    [UsedImplicitly]
-    public class AsyncLambdas : IRunnable
+// ReSharper disable once UnusedMember.Global
+[UsedImplicitly]
+public class AsyncLambdas : IRunnable
+{
+    public string Title { get; } = "Async lambdas";
+    public Order Order { get; } = Order.AsyncVoidVsAsyncTask;
+
+    public string Comment { get; } =
+        "Async lambdas are tricky. Can be cast to both: Action and Func<Task>. Who knows which cast will be done?";
+
+    public Task RunAsync()
     {
-        public string Title { get; } = "Async lambdas";
-        public Order Order { get; } = Order.AsyncVoidVsAsyncTask;
+        Console.WriteLine("Before Parallel.For");
 
-        public string Comment { get; } =
-            "Async lambdas are tricky. Can be cast to both: Action and Func<Task>. Who knows which cast will be done?";
-        public Task RunAsync()
+        Parallel.For(0, 3, async i =>
         {
-            Console.WriteLine("Before Parallel.For");
+            Console.WriteLine("Before async method: " + i);
+            await Task.Yield();
+            Console.WriteLine("After async method: " + i);
+        });
 
-            Parallel.For(0, 3, async i =>
-            {
-                Console.WriteLine("Before async method: " + i);
-                await Task.Yield();
-                Console.WriteLine("After async method: " + i);
-            });
+        Console.WriteLine("After Parallel.For");
 
-            Console.WriteLine("After Parallel.For");
-
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

@@ -1,29 +1,26 @@
-﻿using System.Threading.Tasks;
+namespace Scenarios;
 
-namespace Scenarios
+public interface IRunnable
 {
-    public interface IRunnable
-    {
-        string Title { get; }
-        Order Order { get; }
-        string Comment { get; }
-        Task RunAsync();
-    }
+    string Title { get; }
+    Order Order { get; }
+    string Comment { get; }
+    Task RunAsync();
+}
 
-    public enum Order
-    {
-        SleepVsDelay,
-        AsyncVoid,
-        AsyncVoidVsAsyncTask,
-        AsyncFromSync,
-        Awaiter,
-        Channels,
-        VisualStudioThreading,
-        AsyncFileRead,
-        SystemLinqAsync,
-        Deadlock,
-        WhenAnyVsWhenEach,
-        Reentrancy,
-        ThreadPoolStarvation,
-    }
+public enum Order
+{
+    SleepVsDelay,
+    AsyncVoid,
+    AsyncVoidVsAsyncTask,
+    AsyncFromSync,
+    Awaiter,
+    Channels,
+    VisualStudioThreading,
+    AsyncFileRead,
+    SystemLinqAsync,
+    Deadlock,
+    WhenAnyVsWhenEach,
+    Reentrancy,
+    ThreadPoolStarvation,
 }

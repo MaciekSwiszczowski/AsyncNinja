@@ -1,23 +1,21 @@
-using System;
 using System.Threading.Channels;
-using System.Threading.Tasks;
 using static Scenarios.Helper;
 
-namespace Scenarios.Channels
+namespace Scenarios.Channels;
+
+//
+// https://www.youtube.com/watch?v=ZPZTa3iLXNY
+// https://deniskyashif.com/2019/12/08/csharp-channels-part-1/, https://deniskyashif.com/2019/12/11/csharp-channels-part-2/, https://deniskyashif.com/2020/01/07/csharp-channels-part-3/
+
+[UsedImplicitly]
+public class Channels : IRunnable
 {
-    //
-    // https://www.youtube.com/watch?v=ZPZTa3iLXNY
-    // https://deniskyashif.com/2019/12/08/csharp-channels-part-1/, https://deniskyashif.com/2019/12/11/csharp-channels-part-2/, https://deniskyashif.com/2020/01/07/csharp-channels-part-3/
+    public string Title { get; } = "Channels";
+    public Order Order { get; } = Order.Channels;
 
-    [UsedImplicitly]
-    public class Channels : IRunnable
+    public string Comment { get; } = "Solves producer/consumer problems";
+    public async Task RunAsync()
     {
-        public string Title { get; } = "Channels";
-        public Order Order { get; } = Order.Channels;
-
-        public string Comment { get; } = "Solves producer/consumer problems";
-        public async Task RunAsync()
-        {
 
             //var channel = Channel.CreateBounded<int>(10);
 
@@ -74,6 +72,5 @@ namespace Scenarios.Channels
             }
 
             Console.WriteLine("All was read!");
-        }
     }
 }

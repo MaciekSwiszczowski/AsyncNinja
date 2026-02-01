@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 namespace Scenarios.AsyncFromSync;
 
 // more: https://github.com/StephenCleary/AsyncEx/wiki/AsyncContext

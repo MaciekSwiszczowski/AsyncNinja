@@ -1,32 +1,28 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
 using static Scenarios.Helper;
 
-namespace Scenarios.SleepAndDelay
+namespace Scenarios.SleepAndDelay;
+
+///<image url="$(SolutionDir)\Scenarios\SleepAndDelay\SleepAndDelay.png" />
+[UsedImplicitly]
+public class SleepVsDelay : IRunnable
 {
-    ///<image url="$(SolutionDir)\Scenarios\SleepAndDelay\SleepAndDelay.png" />
-    [UsedImplicitly]
-    public class SleepVsDelay : IRunnable
+    public string Title { get; } = "Sleep() vs Delay()";
+    public Order Order { get; } = Order.SleepVsDelay;
+
+    public string Comment { get; } = "The basics: Thread.Sleep() vs Task.Delay()";
+
+    public async Task RunAsync()
     {
-        public string Title { get; } = "Sleep() vs Delay()";
-        public Order Order { get; } = Order.SleepVsDelay;
+        StartSpan("Thread.Sleep()");
 
-        public string Comment { get; } = "The basics: Thread.Sleep() vs Task.Delay()";
+        Thread.Sleep(DefDelay);
 
-        public async Task RunAsync()
-        {
-            StartSpan("Thread.Sleep()");
+        EndSpan("Thread.Sleep()");
 
-            Thread.Sleep(DefDelay);
+        StartSpan("Task.Delay()");
 
-            EndSpan("Thread.Sleep()");
+        await Task.Delay(DefDelay);
 
-
-            StartSpan("Task.Delay()");
-
-            await Task.Delay(DefDelay);
-
-            EndSpan("Task.Delay()");
-        }
+        EndSpan("Task.Delay()");
     }
 }

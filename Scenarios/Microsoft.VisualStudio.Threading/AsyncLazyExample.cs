@@ -1,31 +1,28 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
 
-namespace Scenarios.Microsoft.VisualStudio.Threading
+namespace Scenarios.Microsoft.VisualStudio.Threading;
+
+// ReSharper disable once UnusedMember.Global
+[UsedImplicitly]
+public class AsyncLazyExample : IRunnable
 {
-    // ReSharper disable once UnusedMember.Global
-    [UsedImplicitly]
-    public class AsyncLazyExample : IRunnable
+    public string Title => "AsyncLazy (deadlock)";
+    public Order Order => Order.VisualStudioThreading;
+
+    public string Comment => "Microsoft.VisualStudio.Threading goodies: AsyncLazy()";
+
+    public async Task RunAsync()
     {
-        public string Title => "AsyncLazy (deadlock)";
-        public Order Order => Order.VisualStudioThreading;
+        var lazySlowClass = new AsyncLazy<Slow>(() => new Task<Slow>(() => new Slow()));
 
-        public string Comment => "Microsoft.VisualStudio.Threading goodies: AsyncLazy()";
+        var slow = await lazySlowClass.GetValueAsync();
+    }
 
-        public async Task RunAsync()
+    private sealed class Slow
+    {
+        public Slow()
         {
-            var lazySlowClass = new AsyncLazy<Slow>(() => new Task<Slow>(() => new Slow()));
-
-            var slow = await lazySlowClass.GetValueAsync();
-        }
-
-        private sealed class Slow
-        {
-            public Slow()
-            {
-                Thread.Sleep(Helper.DefDelay);
-            }
+            Thread.Sleep(Helper.DefDelay);
         }
     }
 }

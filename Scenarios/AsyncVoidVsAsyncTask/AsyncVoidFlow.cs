@@ -1,8 +1,5 @@
-﻿#pragma warning disable VSTHRD100
+#pragma warning disable VSTHRD100
 #pragma warning disable VSTHRD200
-
-using System;
-using System.Threading.Tasks;
 
 namespace Scenarios.AsyncVoidVsAsyncTask;
 

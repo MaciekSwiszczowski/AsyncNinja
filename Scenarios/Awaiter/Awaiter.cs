@@ -1,17 +1,14 @@
-﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace Scenarios.Awaiter
+namespace Scenarios.Awaiter;
+
+[UsedImplicitly]
+public class Awaiter : IRunnable
 {
-    [UsedImplicitly]
-    public class Awaiter : IRunnable
-    {
         public string Title { get; } = "Awaiter";
         public Order Order { get; } = Order.Awaiter;
 
@@ -95,5 +92,4 @@ namespace Scenarios.Awaiter
         {
             return new ControlAwaiter(control);
         }
-    }
 }

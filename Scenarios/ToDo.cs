@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 using Microsoft.ConcurrencyVisualizer.Instrumentation;
 
-namespace Scenarios
-{
+namespace Scenarios;
+
     // TODO
     
     ///
@@ -87,9 +83,9 @@ namespace Scenarios
     //RunInWpfSyncContext(() => tests.ConfigAwaitWrongly());
 
 
-    public class TestScenarios
-    {
-        private static readonly Dictionary<string, Span> Spans = new Dictionary<string, Span>();
+public class TestScenarios
+{
+        private static readonly Dictionary<string, Span> Spans = [];
         private readonly TimeSpan _defDelay = TimeSpan.FromSeconds(1);
 
 
@@ -218,7 +214,6 @@ namespace Scenarios
             await Task.Delay(1000);
 
             EndSpan("Delay()");
-        }
-    }
+}
 
 }
