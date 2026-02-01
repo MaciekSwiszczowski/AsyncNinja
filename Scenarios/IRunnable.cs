@@ -18,9 +18,9 @@ public enum Order
     Channels,
     VisualStudioThreading,
     AsyncFileRead,
-    SystemLinqAsync,
     Deadlock,
     WhenAnyVsWhenEach,
     Reentrancy,
     ThreadPoolStarvation,
+    SystemLinqAsync,
 }
