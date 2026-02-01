@@ -9,6 +9,7 @@ using System.Windows.Threading;
 
 namespace Scenarios.Awaiter
 {
+    [UsedImplicitly]
     public class Awaiter : IRunnable
     {
         public string Title { get; } = "Awaiter";

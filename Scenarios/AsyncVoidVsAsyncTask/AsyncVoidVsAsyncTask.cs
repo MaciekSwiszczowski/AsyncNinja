@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Scenarios.AsyncVoidVsAsyncTask;
 
+[UsedImplicitly]
 public class AsyncVoidVsAsyncTask : IRunnable
 {
     public string Title => "async void vs async task";

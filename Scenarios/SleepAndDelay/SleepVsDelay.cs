@@ -5,6 +5,7 @@ using static Scenarios.Helper;
 namespace Scenarios.SleepAndDelay
 {
     ///<image url="$(SolutionDir)\Scenarios\SleepAndDelay\SleepAndDelay.png" />
+    [UsedImplicitly]
     public class SleepVsDelay : IRunnable
     {
         public string Title { get; } = "Sleep() vs Delay()";

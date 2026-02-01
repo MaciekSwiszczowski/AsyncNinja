@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Scenarios.WhenAnyVsWhenEach;
 
+[UsedImplicitly]
 public sealed class WhenAnyVsWhenEach : IRunnable
 {
     public string Title => "WhenAny vs WhenEach";

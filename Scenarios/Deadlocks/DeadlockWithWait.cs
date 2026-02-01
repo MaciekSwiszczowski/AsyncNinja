@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using static Scenarios.Helper;
 
 namespace Scenarios.Deadlocks
 {
+    [UsedImplicitly]
     public class DeadlockWithWait : IRunnable
     {
         public string Title => "Deadlock with .Wait()";

@@ -149,7 +149,7 @@ internal static class Program
             .Select(static type => (IRunnable) Activator.CreateInstance(type))
             .Where(static t => t is not null)
             .Select(static t => new {t.Order, Runnable = t})
-            .OrderBy(static i => i.Order)
+            .OrderByDescending(static i => i.Order)
             .Select(static (i, j) => new {Order = j, i.Runnable})
             .ToDictionary(static i => i.Order, static i => i.Runnable);
     }
@@ -159,7 +159,8 @@ internal static class Program
         Console.ForegroundColor = ConsoleColor.Green;
 
         var longest = runnables.Values.Max(d => d.Title.Length) + 12;
-        var fullWidthLine = $"|{string.Join("=", Enumerable.Repeat(string.Empty, longest * 2))}|";
+        var columns = 3;
+        var fullWidthLine = $"|{string.Join("=", Enumerable.Repeat(string.Empty, longest * columns))}|";
 
         var currentColor = Console.ForegroundColor;
         Console.WriteLine(fullWidthLine);
@@ -172,28 +173,27 @@ internal static class Program
         Console.WriteLine(fullWidthLine);
         Console.WriteLine();
 
-        var elements = runnables.Values.Count;
-        var half = elements / 2;
-        for (var i = 0; i < half; i++)
-        {
-            var left = runnables.ElementAtOrDefault(i);
-            var right = runnables.ElementAtOrDefault(i + half);
+        var items = runnables.ToList();
+        var elements = items.Count;
+        var rows = (int) Math.Ceiling(elements / (double) columns);
 
-            if (left.Key == right.Key)
+        for (var row = 0; row < rows; row++)
+        {
+            var line = string.Empty;
+            for (var col = 0; col < columns; col++)
             {
-                continue;
+                var index = row + rows * col;
+                if (index >= elements)
+                {
+                    continue;
+                }
+
+                var item = items[index];
+                var entry = $"({PadBoth(item.Key.ToString(), 5)}) {item.Value.Title}";
+                line += entry.PadRight(longest);
             }
 
-            var leftString = $" ({PadBoth(left.Key.ToString(), 5)}) {left.Value.Title}";
-            var rightString = $"({PadBoth(right.Key.ToString(), 5)}) {right.Value.Title}";
-            Console.WriteLine($"{leftString.PadRight(longest)}{rightString}");
-        }
-
-        if (elements % 2 == 1)
-        {
-            var last = runnables.Last();
-            var lastString = $"({PadBoth(last.Key.ToString(), 5)}) {last.Value.Title}";
-            Console.WriteLine($"{"".PadRight(longest)}{lastString}");
+            Console.WriteLine(line.TrimEnd());
         }
 
         Console.WriteLine();

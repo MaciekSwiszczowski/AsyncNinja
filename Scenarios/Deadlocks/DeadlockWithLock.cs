@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Scenarios.Deadlocks
 {
+    [UsedImplicitly]
     public class DeadlockWithLock : IRunnable
     {
         public string Title => "Deadlock with lock()";

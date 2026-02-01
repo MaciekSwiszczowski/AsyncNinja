@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Scenarios.Reentrancy;
 
+[UsedImplicitly]
 public class LockVsSemaphoreSlim : IRunnable
 {
     private readonly SemaphoreSlim _semaphore = new(1, 1);

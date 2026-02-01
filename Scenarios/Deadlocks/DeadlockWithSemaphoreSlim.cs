@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace Scenarios.Deadlocks;
 
+[UsedImplicitly]
 public class DeadlockWithSemaphoreSlim : IRunnable
 {
     private readonly SemaphoreSlim _semaphore = new(1);

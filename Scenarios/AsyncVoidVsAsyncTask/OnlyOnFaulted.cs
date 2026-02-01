@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 namespace Scenarios.AsyncVoidVsAsyncTask
 {
     // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class OnlyOnFaulted : IRunnable
     {
         public string Title { get; } = "ContinueWith with OnlyOnFaulted flag";

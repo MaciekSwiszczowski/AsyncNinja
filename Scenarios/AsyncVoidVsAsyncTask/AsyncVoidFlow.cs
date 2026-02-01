@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Scenarios.AsyncVoidVsAsyncTask;
 
 // ReSharper disable once UnusedMember.Global
+[UsedImplicitly]
 public class AsyncVoidFlow : IRunnable
 {
     public string Title => "Async void returns on await";

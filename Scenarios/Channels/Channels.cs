@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using static Scenarios.Helper;
@@ -9,6 +9,7 @@ namespace Scenarios.Channels
     // https://www.youtube.com/watch?v=ZPZTa3iLXNY
     // https://deniskyashif.com/2019/12/08/csharp-channels-part-1/, https://deniskyashif.com/2019/12/11/csharp-channels-part-2/, https://deniskyashif.com/2020/01/07/csharp-channels-part-3/
 
+    [UsedImplicitly]
     public class Channels : IRunnable
     {
         public string Title { get; } = "Channels";

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
 namespace Scenarios.AsyncFromSync;
@@ -6,6 +6,7 @@ namespace Scenarios.AsyncFromSync;
 // more: https://github.com/StephenCleary/AsyncEx/wiki/AsyncContext
 // https://github.com/StephenCleary/Mvvm.Async
 
+[UsedImplicitly]
 public class AsyncFromSync : IRunnable
 {
     public string Title => "Async from sync";

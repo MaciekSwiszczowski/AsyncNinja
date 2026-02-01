@@ -1,10 +1,11 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
 
 namespace Scenarios.Microsoft.VisualStudio.Threading
 {
     // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class AsyncLazyExample : IRunnable
     {
         public string Title => "AsyncLazy (deadlock)";

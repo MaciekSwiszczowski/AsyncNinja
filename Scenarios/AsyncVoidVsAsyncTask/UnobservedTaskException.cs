@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace Scenarios.AsyncVoidVsAsyncTask
 {
+    [UsedImplicitly]
     internal class UnobservedTaskException : IRunnable
     {
         public string Title { get; } = "unobserved exceptions";

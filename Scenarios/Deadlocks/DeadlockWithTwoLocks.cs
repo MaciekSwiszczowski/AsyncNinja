@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 
 namespace Scenarios.Deadlocks
 {
-    public class DeadlockWithTwoLocks : IRunnable
+[UsedImplicitly]
+public class DeadlockWithTwoLocks : IRunnable
     {
         public string Title => "Deadlock with two lock()";
         public Order Order => Order.Deadlock;

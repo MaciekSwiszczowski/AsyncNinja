@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace Scenarios.ThreadPoolStarvation;
 
+[UsedImplicitly]
 public sealed class ThreadPoolStarvation : IRunnable
 {
     public string Title => "ThreadPool Starvation";

@@ -14,6 +14,7 @@ namespace Scenarios.AsyncVoidVsAsyncTask
     */
 
     // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class AsyncLambdas : IRunnable
     {
         public string Title { get; } = "Async lambdas";
