@@ -1,4 +1,4 @@
-namespace Scenarios.System.Linq.Async;
+namespace Scenarios.AsyncLinq;
 
 // ReSharper disable once CommentTypo
 // https://youtu.be/-Tq4wLyen7Q?t=2444 (Stephen Cleary — Asynchronous streams)
@@ -8,8 +8,8 @@ public class LinqAsync : IRunnable
 {
     private readonly IEnumerable<string> _chains = ["=A", "=B", "=C"];
 
-    public string Title => "System.Linq.Async";
-    public Order Order => Order.SystemLinqAsync;
+    public string Title => "await foreach with LINQ";
+    public Order Order => Order.IAsyncEnumerableLinq;
     public string Comment => "Async LINQ over IAsyncEnumerable";
 
     public async Task RunAsync()

@@ -22,5 +22,5 @@ public enum Order
     WhenAnyVsWhenEach,
     Reentrancy,
     ThreadPoolStarvation,
-    SystemLinqAsync,
+    IAsyncEnumerableLinq,
 }
