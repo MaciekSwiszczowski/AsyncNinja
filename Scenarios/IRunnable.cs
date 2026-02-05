@@ -19,6 +19,7 @@ public enum Order
     VisualStudioThreading,
     AsyncFileRead,
     Deadlock,
+    Lock,
     WhenAnyVsWhenEach,
     Reentrancy,
     ThreadPoolStarvation,
