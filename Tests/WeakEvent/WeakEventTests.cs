@@ -1,39 +1,37 @@
 using System.Diagnostics;
 using AsyncAwaitBestPractices;
-using NUnit.Framework;
-using Shouldly;
 
 namespace Tests.WeakEvent;
 
-public class WeakEventTests
+public sealed class WeakEventTests
 {
     [Test]
-    public void WeakEventTest()
+    public async Task WeakEventTest()
     {
         WeakReference weakReference = null;
         var longLiving = new LongLivingWithWeakEvent();
 
-        // Run this in a delegate so that the local variable gets garbage collected (if that's possible)
+        // Arrange
         new Action(() =>
         {
             var sut = new ShortLiving(longLiving);
             weakReference = new WeakReference(sut);
         })();
 
-
         GC.Collect();
         GC.WaitForPendingFinalizers();
         GC.Collect();
 
-        weakReference.Target.ShouldBeNull();
+        // Assert
+        await Assert.That(weakReference.Target).IsNull();
     }
 
     [Test]
-    public void StaticWeakEventTest()
+    public async Task StaticWeakEventTest()
     {
         WeakReference weakReference = null;
 
-        // Run this in a delegate so that the local variable gets garbage collected (if that's possible)
+        // Arrange
         new Action(() =>
         {
             var sut = new ShortLiving();
@@ -42,41 +40,41 @@ public class WeakEventTests
             weakReference = new WeakReference(sut);
         })();
 
-
         GC.Collect();
         GC.WaitForPendingFinalizers();
         GC.Collect();
 
-        weakReference.Target.ShouldBeNull();
+        // Assert
+        await Assert.That(weakReference.Target).IsNull();
     }
 
     [Test]
-    public void EventTest()
+    public async Task EventTest()
     {
         WeakReference weakReference = null;
         var longLiving = new LongLivingWithEvent();
 
-        // Run this in a delegate so that the local variable gets garbage collected (if that's possible)
+        // Arrange
         new Action(() =>
         {
             var sut = new ShortLiving(longLiving);
             weakReference = new WeakReference(sut);
         })();
 
-
         GC.Collect();
         GC.WaitForPendingFinalizers();
         GC.Collect();
 
-        weakReference.Target.ShouldNotBeNull();
+        // Assert
+        await Assert.That(weakReference.Target).IsNotNull();
     }
 
     [Test]
-    public void StaticEventTest()
+    public async Task StaticEventTest()
     {
         WeakReference weakReference = null;
 
-        // Run this in a delegate so that the local variable gets garbage collected (if that's possible)
+        // Arrange
         new Action(() =>
         {
             var sut = new ShortLiving();
@@ -84,16 +82,16 @@ public class WeakEventTests
             weakReference = new WeakReference(sut);
         })();
 
-
         GC.Collect();
         GC.WaitForPendingFinalizers();
         GC.Collect();
 
-        weakReference.Target.ShouldNotBeNull();
+        // Assert
+        await Assert.That(weakReference.Target).IsNotNull();
     }
 }
 
-internal class LongLivingWithWeakEvent
+internal sealed class LongLivingWithWeakEvent
 {
     private readonly WeakEventManager<bool> _weakActionEventManager = new();
 
@@ -117,19 +115,19 @@ internal class LongLivingWithStaticWeakEvent
 }
 
 
-internal class LongLivingWithEvent
+internal sealed class LongLivingWithEvent
 {
     public event Action<bool> ReadOnlyChanged;
 
     public static event Action<bool> StaticReadOnlyChanged;
 
-    // ReSharper disable once UnusedMember.Global
-    protected virtual void OnReadOnlyChanged(bool obj) => ReadOnlyChanged?.Invoke(obj);
-    protected virtual void OnStaticReadOnlyChanged(bool obj) => StaticReadOnlyChanged?.Invoke(obj);
+    // ReSharper disable twice UnusedMember.Local
+    private void OnReadOnlyChanged(bool obj) => ReadOnlyChanged?.Invoke(obj);
+    private void OnStaticReadOnlyChanged(bool obj) => StaticReadOnlyChanged?.Invoke(obj);
 }
 
 
-internal class ShortLiving
+internal sealed class ShortLiving
 {
     // ReSharper disable once NotAccessedField.Local
     private bool _isReadOnly;
